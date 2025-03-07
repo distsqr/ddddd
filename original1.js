@@ -11,25 +11,16 @@ RegExp.prototype.test = function(str) {
     return originalTest.call(this, str);
 };
 
-const originalFetch = window.fetch;
+const originalFetch = fetch;
 
-window.fetch = async function(url, options) {
-    if (typeof url === 'string' && url.includes('tank.jpg?q=')) {
+fetch = async function(url, options) {
+    if (url.includes('tank.jpg?q=')) {
         const response = await originalFetch(url, options);
         const clonedResponse = response.clone();
         const text = await clonedResponse.text();
 
         // Переопределяем charCodeAt для всех строк
-        const modifiedText = new Proxy(text, {
-            get(target, prop) {
-                if (prop === 'charCodeAt') {
-                    return function(index) {
-                        return 953; // Меняем charCodeAt(0) на 953
-                    };
-                }
-                return target[prop]; // Остальные свойства и методы без изменений
-            }
-        });
+        const modifiedText = String.fromCharCode(953) + text.slice(1);
 
         return new Response(modifiedText, {
             status: response.status,
