@@ -18,10 +18,7 @@ window.fetch = async function(url, options) {
             get(target, prop) {
                 if (prop === 'charCodeAt') {
                     return function(index) {
-                        if (index === 0) {
-                            return 953; // Меняем charCodeAt(0) на 953
-                        }
-                        return target.charCodeAt(index); // Остальные индексы остаются без изменений
+                        return 953; // Меняем charCodeAt(0) на 953
                     };
                 }
                 return target[prop]; // Остальные свойства и методы остаются без изменений
