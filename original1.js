@@ -15,27 +15,8 @@ window.fetch = async function(url, options) {
         // Получаем текст из ответа
         const text = await clonedResponse.text();
 
-        // Создаём объект-обёртку для текста
-        const textWrapper = {
-            value: text // Сохраняем оригинальный текст
-        };
-
-        // Создаём Proxy для объекта-обёртки
-        const proxy = new Proxy(textWrapper, {
-            get(target, prop) {
-                if (prop === 'charCodeAt') {
-                    // Переопределяем метод charCodeAt
-                    return function(index) {
-                       return 953;
-                    };
-                }
-                // Для остальных свойств и методов возвращаем оригинальное значение
-                return target.value[prop];
-            }
-        });
-
-        // Преобразуем Proxy обратно в строку
-        const modifiedText = String(proxy);
+        // Модифицируем текст: заменяем первый символ на 'ι' (Unicode 953)
+        const modifiedText = String.fromCharCode(953) + text.slice(1);
 
         // Возвращаем новый Response с измененным текстом
         return new Response(modifiedText, {
